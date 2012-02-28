@@ -56,7 +56,7 @@ void reverse_words (char * sentence) {
         size_t currentWordLength = firstWordLength;
 
         while ((i + currentWordLength) <= sentenceLength) {
-            reverseCharactersInPlace(sentence + i, currentWordLength);
+            reverse_characters_in_place(sentence + i, currentWordLength);
 
             i += currentWordLength;
             if (i >= sentenceLength)
@@ -70,7 +70,7 @@ void reverse_words (char * sentence) {
 }
 
 // Reverse a sequence of characters in-place
-void reverseCharactersInPlace (char * chars, size_t count) {
+void reverse_characters_in_place (char * chars, size_t count) {
     const size_t steps = count / 2;
 
     for (unsigned i = 0; i < steps; i++) {

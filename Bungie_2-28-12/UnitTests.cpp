@@ -153,6 +153,11 @@ namespace Test
             Assert::AreEqual((unsigned long long)expected, (unsigned long long)actual);
         }
 
+        void MakeNode(struct s_node out[], unsigned index, int nextIndex, int referenceIndex) {
+            out[index].next = (nextIndex >= 0) ? &out[nextIndex] : 0;
+            out[index].reference = (referenceIndex >= 0) ? &out[referenceIndex] : 0;
+        }
+
         [TestMethod]
         void DuplicatesList()
         {
@@ -161,15 +166,10 @@ namespace Test
             struct s_node * zero = 0;
             struct s_node * head = &sourceList[0];
 
-            sourceList[0].next = &sourceList[1];
-            sourceList[1].next = &sourceList[2];
-            sourceList[2].next = &sourceList[3];
-            sourceList[3].next = 0;
-
-            sourceList[0].reference = &sourceList[0];
-            sourceList[1].reference = &sourceList[3];
-            sourceList[2].reference = &sourceList[3];
-            sourceList[3].reference = &sourceList[1];
+            MakeNode(sourceList, 0,  1,  0);
+            MakeNode(sourceList, 1,  2,  3);
+            MakeNode(sourceList, 2,  3,  3);
+            MakeNode(sourceList, 3, -1,  1);
 
             struct s_node * duplicateHead = duplicate_list(head);
             Assert::AreEqual(4U, copy_list_to_array(duplicateHead, duplicateNodes, 4));
@@ -185,6 +185,25 @@ namespace Test
             AssertPointersEqual(duplicateNodes[1], duplicateNodes[3]->reference);
 
             free_list(duplicateHead);
+        }
+
+        [TestMethod]
+        void ThrowsIfListContainsCycle()
+        {
+            struct s_node sourceList[4];
+            struct s_node * head = &sourceList[0];
+
+            MakeNode(sourceList, 0,  1,  0);
+            MakeNode(sourceList, 1,  2,  0);
+            MakeNode(sourceList, 2,  3,  0);
+            MakeNode(sourceList, 3,  0,  0);
+
+            try {
+                struct s_node * duplicateHead = duplicate_list(head);
+                free_list(duplicateHead);
+                Assert::Fail("Should have thrown a C++ exception");
+            } catch (std::exception exc) {
+            }
         }
     };
 }

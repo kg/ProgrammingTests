@@ -1,7 +1,7 @@
 #pragma once
 
 void reverse_words (char *);
-void reverseCharactersInPlace (char *, size_t);
+void reverse_characters_in_place (char *, size_t);
 
 struct s_node {
 	struct s_node * next;
