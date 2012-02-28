@@ -1,0 +1,3 @@
+Since some companies' programming tests actually involve a lot of thinking and hard work, and I'm not getting paid for my time, I figure - hey, I might as well give the code away to the world, right? Maybe someone else out there is having trouble figuring out how to reverse a linked list...
+
+This content is released under the ZLib license. Do with it what you like. Preferably not evil things.
