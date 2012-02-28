@@ -28,8 +28,10 @@ namespace Test
 			}
 		};
 
+        //
         // reverse_words tests
-
+        //
+        
 		[TestMethod]
 		void ReverseWordsDoesNotOverOrUnderrunBuffer()
 		{
@@ -133,7 +135,7 @@ namespace Test
 		[TestMethod]
 		void ReverseWordsThrowsIfAWordIsTooLong()
 		{
-			char buffer[1024]      = "word1 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz word3 word4";
+			char buffer[1024] = "word1 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz word3 word4";
 
             try {
                 reverse_words(buffer);
@@ -141,5 +143,9 @@ namespace Test
             } catch (std::exception exc) {
             }
 		};
+
+        //
+        // duplicate_list tests
+        //
     };
 }

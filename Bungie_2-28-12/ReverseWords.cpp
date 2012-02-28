@@ -27,7 +27,7 @@ void reverse_words (char * sentence) {
 
             if (ch == ' ') {
                 if (currentWordLength > 0xFF)
-                    throw new std::exception("Found a word with more than 256 characters in it.");
+                    throw std::exception("Found a word with more than 256 characters in it.");
                 
                 // We can't store the length of the first word inside the string, so we store it in a local.
                 if (currentWordStart == 0)
