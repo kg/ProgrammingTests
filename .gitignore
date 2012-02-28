@@ -1,6 +1,7 @@
 
 Debug
 Release
+TestResults
 _ReSharper.*
 *.suo
 *.user

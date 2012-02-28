@@ -147,5 +147,44 @@ namespace Test
         //
         // duplicate_list tests
         //
+
+        template <typename T>
+        void AssertPointersEqual(T* expected, T* actual) {
+            Assert::AreEqual((unsigned long long)expected, (unsigned long long)actual);
+        }
+
+        [TestMethod]
+        void DuplicatesList()
+        {
+            struct s_node sourceList[4];
+            struct s_node * duplicateNodes[4];
+            struct s_node * zero = 0;
+            struct s_node * head = &sourceList[0];
+
+            sourceList[0].next = &sourceList[1];
+            sourceList[1].next = &sourceList[2];
+            sourceList[2].next = &sourceList[3];
+            sourceList[3].next = 0;
+
+            sourceList[0].reference = &sourceList[0];
+            sourceList[1].reference = &sourceList[3];
+            sourceList[2].reference = &sourceList[3];
+            sourceList[3].reference = &sourceList[1];
+
+            struct s_node * duplicateHead = duplicate_list(head);
+            Assert::AreEqual(4U, copy_list_to_array(duplicateHead, duplicateNodes, 4));
+
+            AssertPointersEqual(duplicateNodes[1], duplicateNodes[0]->next);
+            AssertPointersEqual(duplicateNodes[2], duplicateNodes[1]->next);
+            AssertPointersEqual(duplicateNodes[3], duplicateNodes[2]->next);
+            AssertPointersEqual(zero, duplicateNodes[3]->next);
+
+            AssertPointersEqual(duplicateNodes[0], duplicateNodes[0]->reference);
+            AssertPointersEqual(duplicateNodes[3], duplicateNodes[1]->reference);
+            AssertPointersEqual(duplicateNodes[3], duplicateNodes[2]->reference);
+            AssertPointersEqual(duplicateNodes[1], duplicateNodes[3]->reference);
+
+            free_list(duplicateHead);
+        }
     };
 }

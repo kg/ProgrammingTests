@@ -9,3 +9,6 @@ struct s_node {
 };
 
 struct s_node * duplicate_list (struct s_node *);
+
+size_t copy_list_to_array(struct s_node *, struct s_node *[], size_t);
+void free_list(struct s_node * list);
