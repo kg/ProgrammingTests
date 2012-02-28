@@ -1,0 +1,10 @@
+
+Debug
+Release
+_ReSharper.*
+*.suo
+*.user
+*.sdf
+*.testsettings
+*.filters
+*.opensdf
