@@ -7,6 +7,5 @@ _ReSharper.*
 *.user
 *.sdf
 *.testsettings
-*.filters
 *.opensdf
 *.ipch
