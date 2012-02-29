@@ -216,7 +216,7 @@ namespace Test
         [TestMethod]
         void LoadsDictionary() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\tinydictionary.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\tinydictionary.txt"));
 
             const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
             Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
@@ -230,7 +230,7 @@ namespace Test
         [TestMethod]
         void LoadsBigDictionary() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\enable1.txt"));
 
             const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
             Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
@@ -244,7 +244,7 @@ namespace Test
         [TestMethod]
         void LoadsSmallBoard() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\smallboard.txt"));
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\smallboard.txt"));
 
             const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
             Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
@@ -265,7 +265,7 @@ namespace Test
         [TestMethod]
         void RejectsLopsidedBoard() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\lopsidedboard.txt"));
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\lopsidedboard.txt"));
 
             const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
             try {
@@ -281,8 +281,8 @@ namespace Test
         [TestMethod]
         void FindsWordsInSmallBoard() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\smallboard.txt"));
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\smallboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\enable1.txt"));
 
             const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
             Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
@@ -336,8 +336,8 @@ namespace Test
         [TestMethod]
         void FindsWordsInNormalBoard() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\normalboard.txt"));
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\normalboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\enable1.txt"));
 
             const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
             Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
@@ -357,8 +357,8 @@ namespace Test
         [TestMethod]
         void FindsWordsInHugeUppercaseBoard() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\hugeuppercaseboard.txt"));
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\hugeuppercaseboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\TestData\\enable1.txt"));
 
             const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
             Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);

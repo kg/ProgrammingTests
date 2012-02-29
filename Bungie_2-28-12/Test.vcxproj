@@ -90,15 +90,13 @@
     <ClInclude Include="common.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="enable1.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="hugeuppercaseboard.txt" />
-    <None Include="largeboard.txt" />
-    <None Include="lopsidedboard.txt" />
-    <None Include="normalboard.txt" />
-    <None Include="smallboard.txt" />
-    <None Include="tinydictionary.txt" />
+    <None Include="TestData\enable1.txt" />
+    <None Include="TestData\hugeuppercaseboard.txt" />
+    <None Include="TestData\largeboard.txt" />
+    <None Include="TestData\lopsidedboard.txt" />
+    <None Include="TestData\normalboard.txt" />
+    <None Include="TestData\smallboard.txt" />
+    <None Include="TestData\tinydictionary.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
