@@ -16,6 +16,7 @@
     <ProjectGUID>{F3B85696-2D62-436B-9FE4-4A7B02092412}</ProjectGUID>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>Test</RootNamespace>
+    <ProjectName>UnitTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
