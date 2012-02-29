@@ -3,6 +3,39 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+const char * readEntireFile (const char * filePath, size_t & fileSize) {
+    FILE * file;
+    char * buffer;
+    struct stat stat;
+
+    file = fopen(filePath, "rb");
+    if (!file)
+        throw std::exception("Failed to open file");
+
+    if (fstat(fileno(file), &stat)) {
+        fclose(file);
+        throw std::exception("Failed to get file info");
+    }
+
+    try {
+        buffer = new char[stat.st_size + 1];
+        size_t bytes_read = fread(buffer, 1, stat.st_size, file);
+        buffer[stat.st_size] = 0;
+        fclose(file);
+
+        if (bytes_read != stat.st_size) {
+            throw std::exception("Failed to read dictionary");
+        }
+    } catch (...) {
+        delete[] buffer;
+
+        throw;
+    }
+
+    fileSize = stat.st_size;
+    return buffer;
+}
+
 namespace Boggle {
     const unsigned DEFAULT_DICTIONARY_SIZE = 1024;
 
@@ -25,48 +58,29 @@ namespace Boggle {
         nodes.reserve(DEFAULT_DICTIONARY_SIZE);
         nodes.push_back(Node(false));
 
-        FILE * dictionaryFile;
-        char * dictionaryBuffer;
-        struct stat stat;
+        const char * dictionaryBuffer;
+        size_t dictionaryLength;
 
-        dictionaryFile = fopen(dictionaryPath, "rb");
-        if (!dictionaryFile)
-            throw std::exception("Failed to open dictionary");
+        dictionaryBuffer = readEntireFile(dictionaryPath, dictionaryLength);
 
-        if (fstat(fileno(dictionaryFile), &stat)) {
-            fclose(dictionaryFile);
-            throw std::exception("Failed to get dictionary info");
+        unsigned currentWordStart = 0;
+        for (unsigned i = 0; i < dictionaryLength; i++) {
+            char ch = dictionaryBuffer[i];
+
+            if ((ch == '\n') || (ch == '\r') || (ch == '\0')) {
+                size_t currentWordLength = i - currentWordStart;
+                if (currentWordLength)
+                    addWord(dictionaryBuffer + currentWordStart, currentWordLength);
+
+                currentWordStart = i + 1;
+            }
         }
 
-        try {
-            dictionaryBuffer = new char[stat.st_size + 1];
-            size_t bytes_read = fread(dictionaryBuffer, 1, stat.st_size, dictionaryFile);
-            dictionaryBuffer[stat.st_size] = 0;
-            fclose(dictionaryFile);
+        size_t currentWordLength = dictionaryLength - currentWordStart;
+        if ((currentWordLength + currentWordStart <= dictionaryLength) && (currentWordLength))
+            addWord(dictionaryBuffer + currentWordStart, currentWordLength);
 
-            if (bytes_read != stat.st_size) {
-                throw std::exception("Failed to read dictionary");
-            }
-
-            unsigned currentWordStart = 0;
-            for (unsigned i = 0; i < stat.st_size; i++) {
-                char ch = dictionaryBuffer[i];
-
-                if ((ch == '\n') || (ch == '\r') || (ch == '\0')) {
-                    size_t currentWordLength = i - currentWordStart;
-                    if (currentWordLength)
-                        addWord(dictionaryBuffer + currentWordStart, currentWordLength);
-
-                    currentWordStart = i + 1;
-                }
-            }
-
-            size_t currentWordLength = stat.st_size - currentWordStart;
-            if ((currentWordLength + currentWordStart <= stat.st_size) && (currentWordLength))
-                addWord(dictionaryBuffer + currentWordStart, currentWordLength);
-        } finally {
-            delete[] dictionaryBuffer;
-        }
+        delete[] dictionaryBuffer;
     }
 
     NodeIndex Dictionary::addWord (const char * word, size_t wordLength) {
@@ -92,5 +106,36 @@ namespace Boggle {
 
         wordCount++;
         return currentIndex;
+    }
+
+    Board::Board (unsigned _width, unsigned _height)
+        : width(_width)
+        , height(_height)
+        , characters(new char[_width * _height])
+    {
+    }
+
+    Board::~Board () {
+        delete[] characters;
+    }
+
+    Board * Board::fromFile (const char * filename) {
+        throw std::exception("Not implemented");
+    }
+    Board * Board::fromString (const char * characters, size_t characterCount) {
+        throw std::exception("Not implemented");
+    }
+
+    char& Board::operator() (unsigned col, unsigned row) {
+        if ((col >= width) || (row >= height))
+            throw std::exception("Index out of range");
+
+        return characters[(row * width) + col];
+    }
+    char Board::operator() (unsigned col, unsigned row) const {
+        if ((col >= width) || (row >= height))
+            throw std::exception("Index out of range");
+
+        return characters[(row * width) + col];
     }
 }

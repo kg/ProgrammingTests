@@ -12,12 +12,15 @@ struct s_node {
 
 struct s_node * duplicate_list (struct s_node *);
 
-size_t copy_list_to_array(struct s_node *, struct s_node *[], size_t);
-void free_list(struct s_node * list);
+size_t copy_list_to_array (struct s_node *, struct s_node *[], size_t);
+void free_list (struct s_node * list);
+
+char * readEntireFile (const char * filePath);
 
 namespace Boggle {
     class Node;
     class Dictionary;
+    class Board;
 
     typedef unsigned int NodeIndex;
     const NodeIndex NODE_NONE = 0;
@@ -42,5 +45,22 @@ namespace Boggle {
         Dictionary (const char * dictionaryPath);
 
         NodeIndex addWord (const char * word, size_t wordLength);
+    };
+
+    class Board {
+    private:
+        char * characters;
+
+    public:
+        const unsigned width, height;
+
+        Board  (unsigned width, unsigned height);
+        ~Board ();
+
+        static Board * fromFile   (const char * filename);
+        static Board * fromString (const char * characters, size_t characterCount);
+
+        char& operator() (unsigned col, unsigned row);
+        char  operator() (unsigned col, unsigned row) const;
     };
 }
