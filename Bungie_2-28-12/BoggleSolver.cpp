@@ -2,6 +2,9 @@
 #include <direct.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <stack>
+#include <sstream>
+#include <algorithm>
 
 const char * readEntireFile (const char * filePath, size_t & fileSize) {
     FILE * file;
@@ -38,16 +41,18 @@ const char * readEntireFile (const char * filePath, size_t & fileSize) {
 
 namespace Boggle {
     const unsigned DEFAULT_DICTIONARY_SIZE = 1024;
+    const unsigned MINIMUM_WORD_LENGTH = 3;
 
-    Node::Node (bool validWord)
-        : isValidWord(validWord) 
+    Node::Node (char _character, bool _isValidWord)
+        : isValidWord(_isValidWord)
+        , character(_character)
     {
-        memset(children, NODE_NONE, sizeof(NodeIndex) * 26);
+        memset(children, 0, sizeof(NodeIndex) * 26);
     }
     
-    NodeIndex Dictionary::allocateNode (bool validWord) {
+    NodeIndex Dictionary::allocateNode (char character, bool isValidWord) {
         NodeIndex result = nodes.size();
-        nodes.push_back(Node(validWord));
+        nodes.push_back(Node(character, isValidWord));
         return result;
     }
 
@@ -56,7 +61,7 @@ namespace Boggle {
     {
         // Allocate node 0 to be the root
         nodes.reserve(DEFAULT_DICTIONARY_SIZE);
-        nodes.push_back(Node(false));
+        nodes.push_back(Node('\0', false));
 
         const char * dictionaryBuffer;
         size_t dictionaryLength;
@@ -97,9 +102,9 @@ namespace Boggle {
                 throw std::exception("Malformed trie");
 
             NodeIndex nextIndex = nodes[currentIndex].children[index];
-            if (nextIndex == NODE_NONE)
+            if (nextIndex == 0)
                 // We need to evaluate nodes[currentIndex] again here because allocateNode may resize nodes
-                nextIndex = nodes[currentIndex].children[index] = allocateNode(i == wordLength - 1);
+                nextIndex = nodes[currentIndex].children[index] = allocateNode(ch, i == wordLength - 1);
 
             currentIndex = nextIndex;
         }
@@ -195,5 +200,88 @@ namespace Boggle {
             throw std::exception("Index out of range");
 
         return characters[(row * width) + col];
+    }
+
+    static void exploreCellNeighbors (
+        const Board * board, const Dictionary * dictionary, std::set<std::string> & result, 
+        std::vector<CellId> cellStack, std::vector<NodeIndex> nodeStack
+    ) {
+        char ch = board->at(cellStack.back().x, cellStack.back().y);
+        const Node & parentNode = dictionary->node(nodeStack.back());
+        if (!parentNode.contains(ch))
+            return;
+
+        NodeIndex nodeIndex = parentNode.children[ch - 'a'];
+        nodeStack.push_back(nodeIndex);
+        if ((nodeStack.size() > MINIMUM_WORD_LENGTH) && dictionary->node(nodeIndex).isValidWord) {
+            std::stringstream w;
+            std::vector<NodeIndex>::iterator iter = nodeStack.begin();
+
+            while (iter != nodeStack.end()) {
+                // Ignore the root node
+                if (*iter != 0) {
+                    char ch = dictionary->node(*iter).character;
+                    w << ch;
+                }
+
+                ++iter;
+            }
+            result.insert(w.str());
+        }
+
+        static CellId potentialNeighbors[] = {
+            CellId(-1, -1), CellId(0, -1), CellId(1, -1),
+            CellId(-1,  0),                CellId(1,  0),
+            CellId(-1,  1), CellId(0,  1), CellId(1,  1)
+        };
+
+        for (unsigned i = 0; i < 9; i++) {
+            CellId neighborId = cellStack.back() + potentialNeighbors[i];
+            if (!board->isInBounds(neighborId))
+                continue;
+
+            // Cell already visited during this traversal, so we can't reuse it.
+            if (std::find(cellStack.begin(), cellStack.end(), neighborId) != cellStack.end())
+                continue;
+
+            cellStack.push_back(neighborId);
+            exploreCellNeighbors(board, dictionary, result, cellStack, nodeStack);
+            cellStack.pop_back();
+        }
+
+        nodeStack.pop_back();
+    }
+
+    static void findWordsStartingInCell (
+        const Board * board, const Dictionary * dictionary, 
+        std::set<std::string> & result, CellId startCell
+    ) {
+        std::vector<CellId> cellStack;
+        std::vector<NodeIndex> nodeStack;
+        cellStack.push_back(startCell);
+        nodeStack.push_back(0);
+
+        exploreCellNeighbors(board, dictionary, result, cellStack, nodeStack);
+    }
+
+    std::set<std::string> Board::findWords (const Dictionary * dictionary) const {
+        std::set<std::string> result;
+
+        for (unsigned y = 0; y < height; y++) {
+            for (unsigned x = 0; x < width; x++) {
+                findWordsStartingInCell(this, dictionary, result, CellId(x, y));
+            }
+        }
+
+        return result;
+    }
+
+    inline bool Board::isInBounds (const CellId & id) const {
+        if (id.x >= width)
+            return false;
+        else if (id.y >= height)
+            return false;
+        else
+            return true;
     }
 }

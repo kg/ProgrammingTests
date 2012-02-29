@@ -1,6 +1,5 @@
 #include "common.h"
 #include "string.h"
-#include <exception>
 
 using namespace System;
 using namespace System::IO;
@@ -277,6 +276,88 @@ namespace Test
             } finally {
                 Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
             }
+        }
+
+        [TestMethod]
+        void FindsWordsInSmallBoard() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\smallboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+
+            const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
+            Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
+
+            const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
+            Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
+
+            List<String^> ^ wordList = gcnew List<String^>();
+
+            {
+                std::set<std::string> result = board->findWords(dictionary);
+                std::set<std::string>::iterator iter = result.begin();
+                while (iter != result.end()) {
+                    wordList->Add(gcnew String(iter->c_str()));
+                    ++iter;
+                }
+            }
+
+            const char * shouldContain[] = {
+                "bred", "yore", "byre", "abed",
+                "oread", "bore", "orby", "robed",
+                "broad", "byroad", "robe", "bored",
+                "derby", "bade", "aero", "read",
+                "orbed", "verb", "aery", "bead", "bread",
+                "very", "road"
+            };
+            const char * shouldNotContain[] = {
+                "robbed", "robber", "board", "dove"
+            };
+
+            for (unsigned i = 0, l = (sizeof(shouldContain) / sizeof(shouldContain[0])); i < l; i++) {
+                String ^ theWord = gcnew String(shouldContain[i]);
+                Assert::IsTrue(
+                    wordList->Contains(theWord), String::Format("Should have found the word '{0}' on the board.", theWord) 
+                );
+            }
+
+            for (unsigned i = 0, l = (sizeof(shouldNotContain) / sizeof(shouldNotContain[0])); i < l; i++) {
+                String ^ theWord = gcnew String(shouldNotContain[i]);
+                Assert::IsFalse(
+                    wordList->Contains(theWord), String::Format("Should not have found the word '{0}' on the board.", theWord) 
+                );
+            }
+
+            delete dictionary;
+            delete board;
+        }
+
+        [TestMethod]
+        void FindsWordsInNormalBoard() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\normalboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+
+            const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
+            Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
+
+            const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
+            Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
+
+            {
+                std::set<std::string> result = board->findWords(dictionary);
+                std::set<std::string>::iterator iter = result.begin();
+                while (iter != result.end()) {
+                    Console::WriteLine(gcnew String(iter->c_str()));
+                    ++iter;
+                }
+            }
+
+            delete dictionary;
+            delete board;
         }
     };
 }
