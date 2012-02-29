@@ -93,6 +93,10 @@
     <None Include="enable1.txt">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="largeboard.txt" />
+    <None Include="lopsidedboard.txt" />
+    <None Include="normalboard.txt" />
+    <None Include="smallboard.txt" />
     <None Include="tinydictionary.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

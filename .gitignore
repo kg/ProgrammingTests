@@ -9,3 +9,4 @@ _ReSharper.*
 *.testsettings
 *.filters
 *.opensdf
+*.ipch

@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BoggleSolver", "BoggleSolver.vcxproj", "{C97DF0FD-F641-4AF1-AB76-97016B266FA7}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Test.vsmdi
@@ -23,6 +25,10 @@ Global
 		{F3B85696-2D62-436B-9FE4-4A7B02092412}.Debug|Win32.Build.0 = Debug|Win32
 		{F3B85696-2D62-436B-9FE4-4A7B02092412}.Release|Win32.ActiveCfg = Release|Win32
 		{F3B85696-2D62-436B-9FE4-4A7B02092412}.Release|Win32.Build.0 = Release|Win32
+		{C97DF0FD-F641-4AF1-AB76-97016B266FA7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C97DF0FD-F641-4AF1-AB76-97016B266FA7}.Debug|Win32.Build.0 = Debug|Win32
+		{C97DF0FD-F641-4AF1-AB76-97016B266FA7}.Release|Win32.ActiveCfg = Release|Win32
+		{C97DF0FD-F641-4AF1-AB76-97016B266FA7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
