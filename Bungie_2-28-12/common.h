@@ -60,7 +60,7 @@ namespace Boggle {
         static Board * fromFile   (const char * filename);
         static Board * fromString (const char * characters, size_t characterCount);
 
-        char& operator() (unsigned col, unsigned row);
-        char  operator() (unsigned col, unsigned row) const;
+        char& at (unsigned col, unsigned row);
+        char  at (unsigned col, unsigned row) const;
     };
 }

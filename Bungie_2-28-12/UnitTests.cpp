@@ -254,6 +254,12 @@ namespace Test
             Assert::AreEqual(3U, board->width);
             Assert::AreEqual(3U, board->height);
 
+            Assert::AreEqual('y', board->at(0, 0));
+            Assert::AreEqual('x', board->at(2, 0));
+            Assert::AreEqual('b', board->at(1, 1));
+            Assert::AreEqual('v', board->at(0, 2));
+            Assert::AreEqual('d', board->at(2, 2));
+
             delete board;
         }
     };

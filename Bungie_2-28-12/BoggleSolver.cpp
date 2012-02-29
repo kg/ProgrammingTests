@@ -160,17 +160,37 @@ namespace Boggle {
 
         Board * result = new Board(rowWidth, numRows);
 
+        numRows = 0;
+        currentRowWidth = 0;
+
+        for (unsigned i = 0; i < characterCount; i++) {
+            char ch = characters[i];
+
+            if (
+                (ch == '\n') || (ch == '\r') || (ch == '\0')
+            ) {
+                if (currentRowWidth)
+                    numRows += 1;
+
+                currentRowWidth = 0;
+            } else {
+                result->at(currentRowWidth, numRows) = ch;
+
+                currentRowWidth += 1;
+            }
+        }
+
         return result;
     }
 
-    char& Board::operator() (unsigned col, unsigned row) {
+    char& Board::at (unsigned col, unsigned row) {
         if ((col >= width) || (row >= height))
             throw std::exception("Index out of range");
 
         return characters[(row * width) + col];
     }
 
-    char Board::operator() (unsigned col, unsigned row) const {
+    char Board::at (unsigned col, unsigned row) const {
         if ((col >= width) || (row >= height))
             throw std::exception("Index out of range");
 
