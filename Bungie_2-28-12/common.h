@@ -37,6 +37,8 @@ namespace Boggle {
         NodeIndex allocateNode (bool validWord);
 
     public:
+        unsigned wordCount;
+
         Dictionary (const char * dictionaryPath);
 
         NodeIndex addWord (const char * word, size_t wordLength);

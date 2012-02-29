@@ -217,12 +217,28 @@ namespace Test
         [TestMethod]
         void LoadsDictionary() {
             String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
-            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\tinydictionary.txt"));
+
             const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
-
             Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
-
             Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
+
+            Assert::AreEqual(7U, dictionary->wordCount);
+
+            delete dictionary;
+        }
+
+        [TestMethod]
+        void LoadsBigDictionary() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+
+            const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
+            Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
+
+            Assert::AreEqual(172820U, dictionary->wordCount);
+
             delete dictionary;
         }
     };
