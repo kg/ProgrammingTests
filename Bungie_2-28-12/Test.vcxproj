@@ -93,6 +93,7 @@
     <None Include="enable1.txt">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="hugeuppercaseboard.txt" />
     <None Include="largeboard.txt" />
     <None Include="lopsidedboard.txt" />
     <None Include="normalboard.txt" />

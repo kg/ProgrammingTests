@@ -347,17 +347,32 @@ namespace Test
             Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
             Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
 
-            {
-                std::set<std::string> result = board->findWords(dictionary);
-                std::set<std::string>::iterator iter = result.begin();
-                while (iter != result.end()) {
-                    Console::WriteLine(gcnew String(iter->c_str()));
-                    ++iter;
-                }
-            }
+            std::set<std::string> result = board->findWords(dictionary);
+            Assert::AreEqual(87U, result.size());
 
             delete dictionary;
             delete board;
         }
+
+        [TestMethod]
+        void FindsWordsInHugeUppercaseBoard() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\hugeuppercaseboard.txt"));
+            String ^ dictionaryPath = Path::Combine(assemblyDir, gcnew String("..\\enable1.txt"));
+
+            const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
+            Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
+
+            const char * dictionaryPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(dictionaryPath)).ToPointer();
+            Boggle::Dictionary * dictionary = new Boggle::Dictionary(dictionaryPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)dictionaryPathPtr));
+
+            std::set<std::string> result = board->findWords(dictionary);
+            Assert::AreEqual(163U, result.size());
+
+            delete dictionary;
+            delete board;
+        }    
     };
 }

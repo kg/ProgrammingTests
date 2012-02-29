@@ -93,7 +93,7 @@ namespace Boggle {
         NodeIndex currentIndex = 0;        
 
         for (unsigned i = 0; i < wordLength; i++) {
-            char ch = word[i];
+            char ch = tolower(word[i]);
             int index = ch - 'a';
             if ((index > 25) || (index < 0))
                 throw std::exception("Found a character outside of the range a-z");
@@ -169,7 +169,7 @@ namespace Boggle {
         currentRowWidth = 0;
 
         for (unsigned i = 0; i < characterCount; i++) {
-            char ch = characters[i];
+            char ch = tolower(characters[i]);
 
             if (
                 (ch == '\n') || (ch == '\r') || (ch == '\0')
