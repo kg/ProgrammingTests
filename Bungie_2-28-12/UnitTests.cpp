@@ -241,5 +241,20 @@ namespace Test
 
             delete dictionary;
         }
+
+        [TestMethod]
+        void LoadsSmallBoard() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\smallboard.txt"));
+
+            const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
+            Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
+            Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
+
+            Assert::AreEqual(3U, board->width);
+            Assert::AreEqual(3U, board->height);
+
+            delete board;
+        }
     };
 }

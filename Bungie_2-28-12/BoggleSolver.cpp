@@ -120,10 +120,47 @@ namespace Boggle {
     }
 
     Board * Board::fromFile (const char * filename) {
-        throw std::exception("Not implemented");
+        size_t boardStringLength;
+        const char * boardString = readEntireFile(filename, boardStringLength);
+        Board * result = Board::fromString(boardString, boardStringLength);
+        delete[] boardString;
+        return result;
     }
+
     Board * Board::fromString (const char * characters, size_t characterCount) {
-        throw std::exception("Not implemented");
+        unsigned rowWidth = 0, numRows = 0, currentRowWidth = 0;
+
+        for (unsigned i = 0; i < characterCount; i++) {
+            char ch = characters[i];
+
+            if (
+                (ch == '\n') || (ch == '\r') || (ch == '\0')
+            ) {
+                if (currentRowWidth) {
+                    numRows += 1;
+                    if (rowWidth == 0)
+                        rowWidth = currentRowWidth;
+                    else if (rowWidth != currentRowWidth)
+                        throw std::exception("Board has inconsistent row widths");
+                }
+
+                currentRowWidth = 0;
+            } else {
+                currentRowWidth += 1;
+            }
+        }
+
+        if (currentRowWidth) {
+            numRows += 1;
+            if (rowWidth == 0)
+                rowWidth = currentRowWidth;
+            else if (rowWidth != currentRowWidth)
+                throw std::exception("Board has inconsistent row widths");
+        }
+
+        Board * result = new Board(rowWidth, numRows);
+
+        return result;
     }
 
     char& Board::operator() (unsigned col, unsigned row) {
@@ -132,6 +169,7 @@ namespace Boggle {
 
         return characters[(row * width) + col];
     }
+
     char Board::operator() (unsigned col, unsigned row) const {
         if ((col >= width) || (row >= height))
             throw std::exception("Index out of range");
