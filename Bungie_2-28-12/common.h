@@ -58,6 +58,9 @@ namespace Boggle {
 
         NodeIndex addWord (const char * word, size_t wordLength);
         inline const Node& node (NodeIndex index) const {
+            if (index >= nodes.size())
+                throw std::exception("Node index out of range");
+            
             return nodes[index];
         }
     };

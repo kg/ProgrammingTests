@@ -3,6 +3,10 @@
 #include <exception>
 
 // Efficiently reverse the order of words within a null-terminated string, using as little additional storage space as possible.
+// To eliminate the need for temporary storage to track word lengths, we replace the spaces between words with the lengths of
+//  words. This means that having a word longer than 255 characters will cause this algorithm to fail. This could be fixed by 
+//  using temporary storage, but for UTF-16 strings (As used on Win32, among other places) the word length limit would go up 
+//  to 65k :)
 void reverse_words (char * sentence) {
     const size_t sentenceLength = strlen(sentence);
     size_t firstWordLength;
@@ -27,7 +31,7 @@ void reverse_words (char * sentence) {
 
             if (ch == ' ') {
                 if (currentWordLength > 0xFF)
-                    throw std::exception("Found a word with more than 256 characters in it.");
+                    throw std::exception("Found a word with more than 255 characters in it.");
                 
                 // We can't store the length of the first word inside the string, so we store it in a local.
                 if (currentWordStart == 0)
