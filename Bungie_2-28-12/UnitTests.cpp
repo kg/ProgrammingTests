@@ -262,5 +262,21 @@ namespace Test
 
             delete board;
         }
+
+        [TestMethod]
+        void RejectsLopsidedBoard() {
+            String ^ assemblyDir = Path::GetDirectoryName(GetAssemblyPath());
+            String ^ boardPath = Path::Combine(assemblyDir, gcnew String("..\\lopsidedboard.txt"));
+
+            const char * boardPathPtr = (const char *)(Marshal::StringToHGlobalAnsi(boardPath)).ToPointer();
+            try {
+                Boggle::Board * board = Boggle::Board::fromFile(boardPathPtr);
+                delete board;
+                Assert::Fail("Did not reject lopsided board");
+            } catch (std::exception exc) {
+            } finally {
+                Marshal::FreeHGlobal(IntPtr((void*)boardPathPtr));
+            }
+        }
     };
 }
