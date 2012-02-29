@@ -89,8 +89,10 @@ struct s_node * duplicate_list(struct s_node * list) {
         //  by the caller.
 
         std::map<const struct s_node *, struct s_node *>::iterator iter = duplicatedNodes.begin();
-        while (iter++ != duplicatedNodes.end())
+        while (iter != duplicatedNodes.end()) {
             delete iter->second;
+            ++iter;
+        }
 
         throw;
     }
